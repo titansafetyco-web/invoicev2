@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+body { @apply bg-slab text-asphalt-900 font-body; -webkit-tap-highlight-color: transparent; }
+h1, h2, h3 { @apply font-display tracking-tight; }
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-3 text-sm font-semibold min-h-[44px] transition active:scale-[.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy; }
+  .btn-primary { @apply bg-stripe text-white hover:bg-navy; }
+  .btn-dark { @apply bg-navy text-white hover:bg-navy-deep; }
+  .btn-ghost { @apply border border-asphalt-700/30 bg-white hover:bg-slab-dark; }
+  .field { @apply w-full rounded-md border border-asphalt-700/25 bg-white px-3 py-3 text-base min-h-[44px] focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/30 disabled:cursor-not-allowed disabled:bg-slab disabled:text-asphalt-700; }
+  .label { @apply mb-1 block text-sm font-medium text-asphalt-700; }
+  .field-compact { @apply w-full rounded border border-asphalt-700/25 bg-white px-2 py-1 text-sm leading-5 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/30; }
+  select.field-compact {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230b2c6b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.45rem center;
+    background-size: 0.7rem;
+    padding-right: 1.4rem;
+  }
+  select.field {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230b2c6b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.5rem center;
+    background-size: 1rem;
+    padding-right: 3.5rem;
+  }
+  .panel { @apply rounded-lg bg-white border border-asphalt-700/15 p-4 sm:p-5; }
+  .sheet { @apply overflow-hidden rounded-md border border-asphalt-700/25; }
+  .sheet-head { @apply hidden border-b border-asphalt-700/25 bg-[#e8eaed] text-xs font-semibold uppercase tracking-wide text-asphalt-700 sm:grid sm:grid-cols-[minmax(0,1fr)_7.5rem_9.5rem_7rem_5.5rem]; }
+  .sheet-row { @apply grid grid-cols-1 gap-2 border-b border-asphalt-700/15 bg-white px-3 py-3 last:border-b-0 even:bg-[#f3f4f6] sm:grid-cols-[minmax(0,1fr)_7.5rem_9.5rem_7rem_5.5rem] sm:items-stretch sm:gap-0 sm:px-0 sm:py-0; }
+  .sheet-cell { @apply flex flex-col justify-center sm:border-r sm:border-asphalt-700/15 sm:px-3 sm:py-2; }
+  .sheet-input { @apply w-full min-h-[40px] border-0 bg-transparent px-0 py-1 text-base focus:outline-none focus:ring-2 focus:ring-inset focus:ring-navy; }
+}
+
+/* Printing / Save as PDF */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; }
+  .print-sheet { border: 0 !important; box-shadow: none !important; padding: 0 !important; }
+  main { padding: 0 !important; margin: 0 !important; }
+  @page { margin: 16mm; }
+}

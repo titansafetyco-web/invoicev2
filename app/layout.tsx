@@ -1,0 +1,18 @@
+import "./globals.css";
+import type { Metadata, Viewport } from "next";
+import { Barlow, Barlow_Condensed } from "next/font/google";
+import Shell from "@/components/Shell";
+
+const body = Barlow({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-body" });
+const display = Barlow_Condensed({ subsets: ["latin"], weight: ["600", "700"], variable: "--font-display" });
+
+export const metadata: Metadata = { title: "Paving Invoices", description: "Estimates, invoices and payments" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={`${body.variable} ${display.variable}`}>
+      <body><Shell>{children}</Shell></body>
+    </html>
+  );
+}
