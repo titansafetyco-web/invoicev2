@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { Mail, Download, Printer, Send, CheckCircle2, Pencil, ArrowRightCircle } from "lucide-react";
+import { Mail, Download, Printer, Send, CheckCircle2, Pencil, ArrowRightCircle, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Doc, Company } from "@/lib/types";
 import { money, totals, dateFmt } from "@/lib/format";
@@ -31,6 +31,9 @@ export default function DocPage() {
   const resources = normalizeResources(doc.resources);
   const t = totals(doc.line_items, doc.tax_rate, resources);
   const isInvoice = doc.type === "invoice";
+  const backHref = !isInvoice
+    ? "/estimates"
+    : doc.status === "pending" ? "/pending" : doc.status === "paid" ? "/paid" : "/invoices";
 
   // Any delivery action (email / PDF / print / process) moves a ready invoice to Pending.
   async function dispatch(kind: "email" | "pdf" | "print" | "process") {
@@ -68,6 +71,7 @@ export default function DocPage() {
   return (
     <div className="space-y-5">
       <div className="no-print flex flex-wrap items-center gap-3">
+        <Link href={backHref} className="btn btn-ghost"><ArrowLeft size={16} /> Back</Link>
         <StatusBadge status={doc.status} />
         <div className="ml-auto grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
           {doc.status === "draft" && <Link href={`/new?id=${doc.id}`} className="btn btn-ghost"><Pencil size={16} /> Edit</Link>}

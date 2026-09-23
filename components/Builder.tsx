@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, HardHat, Pencil, Plus, Trash2, Truck, Users } from "lucide-react";
+import { ArrowLeft, Download, Eye, HardHat, Pencil, Plus, Printer, Trash2, Truck, Users } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Doc, LineItem, Company } from "@/lib/types";
 import { money, totals, dateFmt } from "@/lib/format";
@@ -9,6 +10,7 @@ import { Address, companyAddressLines, formatAddress, formatPhone, parseAddress 
 import { Resources, normalizeResources } from "@/lib/resources";
 import { DEFAULT_PRICE_BOOK, PriceBook, normalizePriceBook } from "@/lib/priceBook";
 import { invoiceDigits, nextInvoiceNumber } from "@/lib/invoiceNumber";
+import { downloadInvoicePdf } from "@/lib/invoicePdf";
 import { AddressFields, NumericField } from "@/components/Fields";
 import Charges from "@/components/Charges";
 import LogoImage from "@/components/LogoImage";
@@ -137,7 +139,10 @@ export default function Builder({ type, doc }: { type: "estimate" | "invoice"; d
   return (
     <>
     <div className={`space-y-5 ${preview ? "no-print" : ""}`}>
-      <h1 className="text-4xl font-bold">{doc ? "Edit" : "New"} {type}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-4xl font-bold">{doc ? "Edit" : "New"} {type}</h1>
+        <Link href={doc ? `/doc/${doc.id}` : type === "invoice" ? "/invoices" : "/estimates"} className="btn btn-ghost"><ArrowLeft size={16} /> Back</Link>
+      </div>
 
       <section className="panel space-y-6">
         <div className="border-b border-asphalt-700/10 pb-3">
@@ -308,7 +313,33 @@ export default function Builder({ type, doc }: { type: "estimate" | "invoice"; d
             <div className="no-print mb-3 flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm font-medium text-white">Invoice PDF preview. Nothing is saved.</p>
               <div className="flex gap-2">
-                <button type="button" className="btn btn-primary" onClick={() => { document.title = invoiceNumber ? `#${invoiceNumber}` : "Invoice"; setTimeout(() => window.print(), 50); }}>Download PDF</button>
+                <button type="button" className="btn btn-primary" onClick={() => downloadInvoicePdf({
+                  number: invoiceNumber,
+                  issued,
+                  due: f.due_date ? dateFmt(f.due_date) : undefined,
+                  companyName: co?.name || "Company name",
+                  companyLines: companyAddressLines(co?.address ?? "", co?.phone),
+                  email: co?.email || undefined,
+                  logoUrl: co?.logo_url,
+                  billTo: [f.client_name || "—", billTo, f.client_email, f.client_phone].filter(Boolean),
+                  jobSite: site || "—",
+                  services: items.map((item) => ({ label: item.service, qty: `${item.qty} ${item.unit}`, rate: money(item.rate), amount: money(item.qty * item.rate) })),
+                  groups: ([["Labor", resources.labor], ["Teams", resources.teams], ["Equipment", resources.equipment]] as const)
+                    .filter(([, rows]) => rows.length > 0)
+                    .map(([title, rows]) => ({ title, rows: rows.map((row) => ({ label: row.name, qty: `${row.qty} ${row.unit}`, rate: money(row.rate), amount: money(row.qty * row.rate) })) })),
+                  totals: [
+                    { label: "Services", value: money(t.services) },
+                    { label: "Labor", value: money(t.labor) },
+                    { label: "Teams", value: money(t.teams) },
+                    { label: "Equipment", value: money(t.equipment) },
+                    { label: "Subtotal", value: money(t.subtotal) },
+                    { label: `Tax (${f.tax_rate}%)`, value: money(t.tax) },
+                    { label: "Total", value: money(t.total), strong: true },
+                  ],
+                  notes: f.notes,
+                  terms: co?.payment_terms,
+                })}><Download size={16} /> Download PDF</button>
+                <button type="button" className="btn btn-ghost bg-white" onClick={() => { document.title = invoiceNumber ? `#${invoiceNumber}` : "Invoice"; setTimeout(() => window.print(), 50); }}><Printer size={16} /> Print</button>
                 <button type="button" className="btn btn-ghost bg-white" onClick={() => setPreview(false)}>Close</button>
               </div>
             </div>

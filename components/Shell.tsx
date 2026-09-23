@@ -2,13 +2,12 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, FileText, FilePen, Receipt, Clock, CheckCircle2, Contact, Users, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, Receipt, Clock, CheckCircle2, Contact, Users, Settings, LogOut } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 const NAV = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
   { href: "/estimates", label: "Estimates", icon: FileText },
-  { href: "/drafts", label: "Drafts", icon: FilePen },
   { href: "/invoices", label: "Invoices", icon: Receipt },
   { href: "/pending", label: "Pending", icon: Clock },
   { href: "/paid", label: "Paid", icon: CheckCircle2 },
@@ -83,7 +82,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 pb-28 md:pb-8 max-w-6xl w-full mx-auto">{children}</main>
 
       {/* Phone bottom tab bar */}
-      <nav className="no-print md:hidden fixed bottom-0 inset-x-0 z-20 grid grid-cols-9 bg-navy-deep text-white"
+      <nav className="no-print md:hidden fixed bottom-0 inset-x-0 z-20 grid grid-cols-8 bg-navy-deep text-white"
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
         {NAV.map(({ href, label, icon: Icon }) => (
           <Link key={href} href={href}
