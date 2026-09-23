@@ -51,4 +51,21 @@ alter table customers enable row level security;
 create policy "auth all settings" on company_settings for all to authenticated using (true) with check (true);
 create policy "auth all documents" on documents for all to authenticated using (true) with check (true);
 create policy "auth all customers" on customers for all to authenticated using (true) with check (true);
+
+-- Forgot password: only an email already saved on a created user can request a reset.
+create or replace function public.member_can_reset(p_email text)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.members
+    where lower(email) = lower(trim(p_email))
+  );
+$$;
+revoke all on function public.member_can_reset(text) from public;
+grant execute on function public.member_can_reset(text) to anon, authenticated;
 -- Then: Supabase > Authentication > Users > Add user (your login). Disable public sign-ups.
