@@ -52,7 +52,7 @@ export default function DocPage() {
   async function publish() {
     const { id: _i, created_at, invoice_number, ...rest } = doc as any;
     const { data: taken } = await supabase.from("documents").select("id, type, status, number, invoice_number");
-    const used = (taken ?? []).flatMap((row: Doc) => {
+    const used = (taken ?? []).flatMap((row) => {
       if (row.id === doc!.id) return [];
       if (row.type === "invoice" && /^\d+$/.test(row.number)) return [row.number];
       if (row.type === "estimate" && row.status === "draft" && row.invoice_number && /^\d+$/.test(row.invoice_number)) return [row.invoice_number];

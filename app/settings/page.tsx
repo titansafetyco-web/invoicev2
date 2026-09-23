@@ -22,13 +22,14 @@ export default function Settings() {
   const set = (k: keyof Company, v: any) => { setSaved(false); setC({ ...c, [k]: v }); };
 
   async function save() {
+    if (!c) return;
     const { logo_url: _logo, ...fields } = c;
     await supabase.from("company_settings").update(fields).eq("id", 1);
     setSaved(true);
   }
 
   async function onLogo(file: File | undefined) {
-    if (!file) return;
+    if (!file || !c) return;
     setLogoError("");
     if (!LOGO_TYPES.includes(file.type)) {
       setLogoError("Use a PNG, JPG, WEBP, or SVG logo.");
@@ -60,6 +61,7 @@ export default function Settings() {
   }
 
   async function removeLogo() {
+    if (!c) return;
     setLogoError("");
     setUploading(true);
     await supabase.storage.from("branding").remove(LOGO_NAMES);
