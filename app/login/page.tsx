@@ -73,7 +73,7 @@ export default function Login() {
   }
 
   return (
-    <div className="grid min-h-screen place-items-center bg-[linear-gradient(180deg,#6ea2e8_0%,#4b7ec8_100%)] p-4">
+    <div className="grid min-h-screen place-items-center bg-slab-dark p-4">
       <div className="panel w-full max-w-sm overflow-hidden border-x-0 border-b-0 border-t-8 border-t-stripe p-0">
         <div className="bg-[linear-gradient(180deg,#163f86_0%,#0d2d64_100%)] px-5 pb-4 pt-5">
           <img src="/logo.png" alt="All American Asphalt" className="mx-auto w-full" />
