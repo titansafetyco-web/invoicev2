@@ -2,5 +2,6 @@ node_modules
 .next
 .env.local
 tsconfig.tsbuildinfo
+.vercel
 americanlogo.jpg
 americanlogo-w.webp
