@@ -5,3 +5,4 @@ tsconfig.tsbuildinfo
 .vercel
 americanlogo.jpg
 americanlogo-w.webp
+.env*
